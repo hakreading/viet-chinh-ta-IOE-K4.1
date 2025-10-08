@@ -401,7 +401,7 @@
             { en: "What lesson are they having?", vi: "Họ đang có tiết học gì?", emoji: "📚" },
             { en: "These are my rulers.", vi: "Đây là những cây thước của tôi.", emoji: "📏" },
             { en: "We are at home on Sundays.", vi: "Chúng tôi ở nhà vào các ngày Chủ nhật.", emoji: "🏠" },
-            { en: "Look at the board, please.", vi: "Xin hãy nhìn lên bảng.", emoji: "칠판" },
+            { en: "Look at the board, please.", vi: "Xin hãy nhìn lên bảng.", emoji: "📋" },
             { en: "What is the date today? It’s April the seventh.", vi: "Hôm nay là ngày mấy? Ngày bảy tháng tư.", emoji: "📅" },
             { en: "Tom is my friend too.", vi: "Tom cũng là bạn của tôi.", emoji: "🧑‍🤝‍🧑" },
             { en: "What time is it?", vi: "Mấy giờ rồi?", emoji: "⏰" },
@@ -535,7 +535,6 @@
                      setIsSpeaking(false);
                 };
 
-                // Hủy bỏ lời nói hiện tại trước khi nói lời mới
                 if (synth.speaking) {
                     synth.cancel();
                 }
@@ -823,9 +822,8 @@
                 inputRef.current?.focus();
                 
                 const sentenceToSpeak = sentences[index].en;
-                // Play twice
                 speak(sentenceToSpeak, { onEnd: () => {
-                    if (!isSpeaking) { // Avoid re-speaking if interrupted
+                    if (!isSpeaking) {
                          speak(sentenceToSpeak);
                     }
                 }});
@@ -838,7 +836,7 @@
                     cancel();
                     if (nextSentenceTimeoutRef.current) clearTimeout(nextSentenceTimeoutRef.current);
                 };
-            }, [sentences]); // Only re-run when sentences array changes (i.e., new topic)
+            }, [sentences]);
 
             const handleCheckAnswer = () => {
                 if (isLocked) return;
