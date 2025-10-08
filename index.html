@@ -312,7 +312,6 @@
         const { useState, useEffect, useRef, useCallback } = React;
 
         const allSentences = [
-            // Dữ liệu câu không thay đổi, chỉ sửa 2 câu viết hoa
             { en: "There are eight pictures in the classroom.", vi: "Có tám bức tranh trong lớp học.", emoji: "🖼️" },
             { en: "The book is under that chair.", vi: "Quyển sách ở dưới cái ghế đó.", emoji: "📖" },
             { en: "This is a red crayon.", vi: "Đây là một cây bút sáp màu đỏ.", emoji: "🖍️" },
@@ -417,7 +416,7 @@
             { en: "When is your birthday, Mai?", vi: "Khi nào là sinh nhật của bạn, Mai?", emoji: "🎂" },
             { en: "This is my brother. His name is David.", vi: "Đây là anh trai tôi. Tên anh ấy là David.", emoji: "👦" },
             { en: "I like to sing and dance.", vi: "Tôi thích hát và nhảy.", emoji: "💃" },
-            { en: "I like running.", vi: "Tôi thích chạy.", emoji: "🏃" }, // SỬA LỖI: Chuyển từ viết hoa sang viết thường
+            { en: "I LIKE RUNNING.", vi: "TÔI THÍCH CHẠY.", emoji: "🏃" },
             { en: "Why does she like Arts?", vi: "Tại sao cô ấy thích môn Mỹ thuật?", emoji: "🎨" },
             { en: "My mother can drive a car.", vi: "Mẹ tôi có thể lái xe ô tô.", emoji: "🚗" },
             { en: "Nam plays the guitar with his friends on Fridays.", vi: "Nam chơi guitar với bạn bè vào các ngày thứ Sáu.", emoji: "🎸" },
@@ -491,7 +490,7 @@
             { en: "Do you want some grapes?", vi: "Bạn có muốn ăn nho không?", emoji: "🍇" },
             { en: "How many televisions are there in your house? Only one.", vi: "Nhà bạn có bao nhiêu cái tivi? Chỉ có một.", emoji: "📺" },
             { en: "Give me a packet of milk, please.", vi: "Làm ơn cho tôi một hộp sữa.", emoji: "🥛" },
-            { en: "I like music.", vi: "Tôi thích âm nhạc.", emoji: "🎵" }, // SỬA LỖI: Chuyển từ viết hoa sang viết thường
+            { en: "I LIKE MUSIC.", vi: "TÔI THÍCH ÂM NHẠC.", emoji: "🎵" },
             { en: "My sister is playing with the teddy bear.", vi: "Em gái tôi đang chơi với gấu bông.", emoji: "🧸" }
         ];
 
@@ -532,12 +531,8 @@
                     setIsSpeaking(false);
                     if (options.onEnd) options.onEnd();
                 };
-                // SỬA LỖI: Xử lý trường hợp API đọc bị lỗi để game không bị treo
-                utterance.onerror = (event) => {
-                    console.error('SpeechSynthesisUtterance.onerror', event);
-                    setIsSpeaking(false);
-                    // Vẫn gọi onEnd để game tiếp tục chạy, tránh bị kẹt
-                    if (options.onEnd) options.onEnd();
+                utterance.onerror = () => {
+                     setIsSpeaking(false);
                 };
 
                 if (synth.speaking) {
@@ -827,11 +822,13 @@
                 inputRef.current?.focus();
                 
                 const sentenceToSpeak = sentences[index].en;
-                // SỬA LỖI: Bỏ callback `onEnd` ở đây để tránh lỗi giọng nói bị lặp lại vô hạn.
-                // Giọng nói sẽ chỉ phát một lần khi câu mới xuất hiện.
-                speak(sentenceToSpeak);
+                speak(sentenceToSpeak, { onEnd: () => {
+                    if (!isSpeaking) {
+                         speak(sentenceToSpeak);
+                    }
+                }});
 
-            }, [sentences, onGameEnd, score, completed, correctCount, errors, cancel, speak]);
+            }, [sentences, onGameEnd, score, completed, correctCount, errors, cancel, speak, isSpeaking]);
             
             useEffect(() => {
                 startNewSentence(0);
@@ -845,8 +842,7 @@
                 if (isLocked) return;
                 
                 const cleanedUserAnswer = userAnswer.trim();
-                // CẢI TIẾN: Thêm .trim() cho đáp án để đảm bảo so sánh chính xác
-                const correctAnswer = currentSentence.en.trim();
+                const correctAnswer = currentSentence.en;
 
                 if (cleanedUserAnswer === correctAnswer) {
                     setIsCorrect(true);
@@ -857,7 +853,6 @@
                     setCorrectCount(prev => prev + 1);
                     setCompleted(prev => prev + 1);
                     cancel();
-                    // Đọc lại đáp án đúng, sau khi đọc xong sẽ chuyển sang câu tiếp theo
                     speak(correctAnswer, { onEnd: () => {
                         nextSentenceTimeoutRef.current = setTimeout(() => startNewSentence(currentIndex + 1), 2000);
                     }});
