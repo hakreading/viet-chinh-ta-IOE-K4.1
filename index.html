@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         :root {
@@ -37,9 +37,11 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding: 1rem;
             color: var(--text-color);
             overscroll-behavior: none;
             -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
 
         #root {
@@ -52,9 +54,9 @@
 
         .container {
             text-align: center;
-            padding: 25px;
+            padding: 24px;
             max-width: 900px;
-            width: 95%;
+            width: 100%;
             background: var(--white-color);
             border-radius: 24px;
             box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1), 0 4px 15px rgba(0, 0, 0, 0.05);
@@ -74,7 +76,7 @@
             color: #555;
             font-weight: 600;
         }
-
+        
         .meaning {
             font-size: clamp(1.1em, 4.5vw, 1.6em);
             color: var(--primary-dark);
@@ -85,14 +87,14 @@
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
+            min-height: 3rem;
         }
 
         .input-container {
             position: relative;
             margin: 30px 0;
         }
-
-        #answerInput,
+        
         .text-input {
             width: 100%;
             padding: 15px 20px;
@@ -105,18 +107,17 @@
             transition: all 0.3s ease;
         }
 
-        #answerInput:focus,
         .text-input:focus {
             outline: none;
             box-shadow: 0 0 0 4px rgba(236, 64, 122, 0.3);
         }
 
-        #answerInput.correct {
+        .text-input.correct {
             border-color: var(--success-color);
             background-color: #e8f5e9;
         }
 
-        #answerInput.incorrect {
+        .text-input.incorrect {
             border-color: var(--error-color);
             animation: shake 0.5s;
         }
@@ -166,7 +167,7 @@
             touch-action: manipulation;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
+        
         button:hover,
         button:focus {
             transform: translateY(-2px);
@@ -192,10 +193,12 @@
             font-size: clamp(1.1em, 4vw, 1.4em);
             margin: 15px 0;
             font-weight: 700;
-            min-height: 25px;
-            color: var(--error-color);
+            min-height: 2rem;
         }
-
+        
+        .message.success { color: var(--success-color); }
+        .message.error { color: var(--error-color); }
+        
         .start-screen,
         .topic-selection-screen,
         .topic-congrats-screen,
@@ -205,18 +208,22 @@
             align-items: center;
             gap: 15px;
             width: 100%;
+            margin-top: 2rem;
         }
 
-        .main-btn,
-        .topic-btn,
-        .congrats-btn {
+        .main-btn, .topic-btn, .congrats-btn {
             padding: 15px 40px;
             font-size: 1.2em;
             border-radius: 16px;
             width: 90%;
             max-width: 450px;
+            transition: transform 0.2s ease;
         }
         
+        .main-btn:hover, .topic-btn:hover, .congrats-btn:hover {
+            transform: scale(1.05);
+        }
+
         .topic-btn-container {
              display: flex;
              flex-direction: column;
@@ -228,18 +235,18 @@
         .main-btn { background-color: var(--success-color); }
         .main-btn:hover { background: #388e3c; }
         
-        .topic-btn-color-1 { background-color: var(--topic-color-1); }
-        .topic-btn-color-1:hover { background-color: #d32f2f; }
-        .topic-btn-color-2 { background-color: var(--topic-color-2); }
-        .topic-btn-color-2:hover { background-color: #1976d2; }
-        .topic-btn-color-3 { background-color: var(--topic-color-3); }
-        .topic-btn-color-3:hover { background-color: #388e3c; }
-        .topic-btn-color-4 { background-color: var(--topic-color-4); }
-        .topic-btn-color-4:hover { background-color: #f57c00; }
-        .topic-btn-color-5 { background-color: var(--topic-color-5); }
-        .topic-btn-color-5:hover { background-color: #8e24aa; }
-        .topic-btn-color-6 { background-color: var(--topic-color-6); }
-        .topic-btn-color-6:hover { background-color: #546e7a; }
+        .topic-btn.topic-btn-color-1 { background-color: var(--topic-color-1); }
+        .topic-btn.topic-btn-color-1:hover { background-color: #d32f2f; }
+        .topic-btn.topic-btn-color-2 { background-color: var(--topic-color-2); }
+        .topic-btn.topic-btn-color-2:hover { background-color: #1976d2; }
+        .topic-btn.topic-btn-color-3 { background-color: var(--topic-color-3); }
+        .topic-btn.topic-btn-color-3:hover { background-color: #388e3c; }
+        .topic-btn.topic-btn-color-4 { background-color: var(--topic-color-4); }
+        .topic-btn.topic-btn-color-4:hover { background-color: #f57c00; }
+        .topic-btn.topic-btn-color-5 { background-color: var(--topic-color-5); }
+        .topic-btn.topic-btn-color-5:hover { background-color: #8e24aa; }
+        .topic-btn.topic-btn-color-6 { background-color: var(--topic-color-6); }
+        .topic-btn.topic-btn-color-6:hover { background-color: #546e7a; }
 
         #playerNameInput {
             font-family: 'Nunito', sans-serif;
@@ -248,39 +255,29 @@
             border-radius: 12px;
             border: 2px solid var(--primary-color);
             text-align: center;
-            width: 80%;
-            max-width: 300px;
+            width: 90%;
+            max-width: 450px;
         }
 
         .error-review-list {
             list-style-type: none;
             padding: 0;
             width: 100%;
-            max-height: 40vh;
+            max-height: 50vh;
             overflow-y: auto;
             border: 1px solid #ddd;
             border-radius: 8px;
+            background-color: #fff;
         }
         .error-review-item {
             padding: 15px;
             border-bottom: 1px solid #eee;
             text-align: left;
         }
-        .error-review-item:last-child {
-            border-bottom: none;
-        }
-        .error-label {
-            font-weight: 700;
-            font-size: 0.9em;
-        }
-        .correct-answer {
-            color: var(--success-color);
-            word-break: break-all;
-        }
-        .user-answer {
-            color: var(--error-color);
-            word-break: break-all;
-        }
+        .error-review-item:last-child { border-bottom: none; }
+        .error-label { font-weight: 700; font-size: 0.9em; color: #555; }
+        .correct-answer { color: var(--success-color); word-break: break-word; }
+        .user-answer { color: var(--error-color); word-break: break-word; }
         .error-char {
             color: #d32f2f;
             font-weight: bold;
@@ -301,6 +298,7 @@
         @media (max-width: 600px) {
             .container { padding: 15px; }
             button { padding: 10px 20px; }
+            .main-btn, .topic-btn, .congrats-btn { font-size: 1em; padding: 12px 20px;}
         }
     </style>
 </head>
@@ -586,7 +584,6 @@
                     this.speed = 2;
                     this.acceleration = 1.05;
                     this.brightness = random(50, 70);
-                    this.targetRadius = 1;
                 }
 
                 Firework.prototype.update = function (index) {
@@ -701,19 +698,19 @@
                     <input
                         type="text"
                         id="playerNameInput"
-                        className="text-input"
                         placeholder="Nhập tên của bạn..."
                         value={playerName}
                         onChange={(e) => setPlayerName(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleStart()}
                     />
                     <button id="startBtn" className="main-btn" onClick={handleStart}>Bắt đầu</button>
-                    {error && <div className="message">{error}</div>}
+                    {error && <div className="message error">{error}</div>}
                 </div>
             );
         }
 
         function TopicSelectionScreen({ onSelectTopic }) {
+            const topicColors = ['1', '2', '3', '4', '5', '6'];
             return (
                 <div className="topic-selection-screen">
                     <div className="game-subtitle">Chọn một chủ đề để bắt đầu</div>
@@ -721,7 +718,7 @@
                         {Object.keys(topics).map((topic, index) => (
                             <button
                                 key={topic}
-                                className={`topic-btn topic-btn-color-${(index % 6) + 1}`}
+                                className={`topic-btn topic-btn-color-${topicColors[index % topicColors.length]}`}
                                 onClick={() => onSelectTopic(topic)}
                             >
                                 {`${topic} (${topics[topic].length} câu)`}
@@ -748,7 +745,7 @@
 
             return (
                 <div className="review-errors-screen">
-                     <div className="game-subtitle">Xem lại các câu trả lời sai</div>
+                     <h2 className="game-subtitle">Xem lại các câu trả lời sai</h2>
                      <ul className="error-review-list">
                         {errors.map((error, index) => (
                             <li key={index} className="error-review-item">
@@ -769,7 +766,7 @@
         function CongratsScreen({ score, total, correctCount, playerName, topic, onPlayAgain, onSelectTopic, onReviewErrors, errors }) {
             return (
                 <div className="topic-congrats-screen">
-                    <div className="message" style={{ color: 'var(--success-color)', fontSize: '1.5em', lineHeight: '1.4' }}>
+                    <div className="message success" style={{ fontSize: '1.5em', lineHeight: '1.4' }}>
                         Chúc mừng <strong>{playerName}</strong>!<br />
                         Bạn đã đạt {score} điểm, hoàn thành đúng {correctCount}/{total} câu trong "{topic}".
                     </div>
@@ -793,7 +790,7 @@
             const [mistakeCount, setMistakeCount] = useState(0);
             const [userAnswer, setUserAnswer] = useState('');
             const [message, setMessage] = useState('');
-            const [messageColor, setMessageColor] = useState('var(--error-color)');
+            const [messageType, setMessageType] = useState('error');
             const [isCorrect, setIsCorrect] = useState(null);
             const [isLocked, setIsLocked] = useState(false);
             const [errors, setErrors] = useState([]);
@@ -809,7 +806,7 @@
                 if (nextSentenceTimeoutRef.current) clearTimeout(nextSentenceTimeoutRef.current);
 
                 if (index >= sentences.length) {
-                    onGameEnd({ score, completed, correctCount, errors });
+                    onGameEnd({ score, correctCount, errors });
                     return;
                 }
                 
@@ -822,13 +819,9 @@
                 inputRef.current?.focus();
                 
                 const sentenceToSpeak = sentences[index].en;
-                speak(sentenceToSpeak, { onEnd: () => {
-                    if (!isSpeaking) {
-                         speak(sentenceToSpeak);
-                    }
-                }});
+                speak(sentenceToSpeak);
 
-            }, [sentences, onGameEnd, score, completed, correctCount, errors, cancel, speak, isSpeaking]);
+            }, [sentences, onGameEnd, score, correctCount, errors, cancel, speak]);
             
             useEffect(() => {
                 startNewSentence(0);
@@ -848,7 +841,7 @@
                     setIsCorrect(true);
                     setIsLocked(true);
                     setMessage('Chính xác! +10 điểm.');
-                    setMessageColor('var(--success-color)');
+                    setMessageType('success');
                     setScore(prev => prev + 10);
                     setCorrectCount(prev => prev + 1);
                     setCompleted(prev => prev + 1);
@@ -860,6 +853,7 @@
                     const newMistakeCount = mistakeCount + 1;
                     setMistakeCount(newMistakeCount);
                     setIsCorrect(false);
+                    setMessageType('error');
                     
                     if (newMistakeCount >= 3) {
                         setIsLocked(true);
@@ -904,7 +898,7 @@
                         <input
                             ref={inputRef}
                             type="text"
-                            id="answerInput"
+                            className={`text-input ${isCorrect === true ? 'correct' : ''} ${isCorrect === false ? 'incorrect' : ''}`}
                             placeholder="Nhập câu bạn nghe được..."
                             autoComplete="off"
                             autoCorrect="off"
@@ -914,14 +908,13 @@
                             onChange={(e) => setUserAnswer(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleCheckAnswer()}
                             disabled={isLocked}
-                            className={`${isCorrect === true ? 'correct' : ''} ${isCorrect === false ? 'incorrect' : ''}`}
                         />
                         <div id="hint" ref={hintRef}>{currentSentence.en}</div>
                     </div>
-                    <div className="message" style={{ color: messageColor }}>{message}</div>
+                    <div className={`message ${messageType}`}>{message}</div>
                     <div className="buttons">
                         <button id="listenAgainBtn" onClick={handleListenAgain} disabled={isSpeaking || isLocked}>Nghe lại</button>
-                        <button id="checkBtn" onClick={handleCheckAnswer} disabled={isLocked}>Kiểm tra</button>
+                        <button id="checkBtn" onClick={handleCheckAnswer} disabled={isLocked || !userAnswer}>Kiểm tra</button>
                          <button 
                             id="hintBtn" 
                             disabled={isLocked}
@@ -965,11 +958,10 @@
             };
 
             const handleGameEnd = (result) => {
+                 if (!currentTopic) return;
                 setGameResult({
-                     score: result.score, 
+                     ...result,
                      total: topics[currentTopic].length,
-                     correctCount: result.correctCount,
-                     errors: result.errors
                 });
                 setGameState(GameState.CONGRATS);
             };
@@ -989,6 +981,7 @@
                     case GameState.TOPIC_SELECTION:
                         return <TopicSelectionScreen onSelectTopic={handleSelectTopic} />;
                     case GameState.GAME:
+                        if (!currentTopic) return <TopicSelectionScreen onSelectTopic={handleSelectTopic} />;
                         return <GameScreen 
                                     sentences={topics[currentTopic]}
                                     topicName={currentTopic} 
@@ -996,6 +989,7 @@
                                     onBackToTopics={handleBackToTopics} 
                                 />;
                     case GameState.CONGRATS:
+                        if (!currentTopic) return <TopicSelectionScreen onSelectTopic={handleSelectTopic} />;
                         return <CongratsScreen 
                                     {...gameResult} 
                                     playerName={playerName} 
@@ -1016,14 +1010,15 @@
 
             return (
                 <div className="container">
-                    <div className="game-title">NGHE VÀ VIẾT CHÍNH TẢ</div>
+                    <h1 className="game-title">NGHE VÀ VIẾT CHÍNH TẢ</h1>
                     {renderScreen()}
                 </div>
             );
         }
 
-        ReactDOM.render(<App />, document.getElementById('root'));
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
     </script>
 </body>
-
 </html>
